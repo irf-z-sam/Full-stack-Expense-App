@@ -1,0 +1,67 @@
+const alldetails = require('../models/define');
+
+exports.addexpense = async(req,res,next) =>{
+    try{
+        const expens = req.body.expens;
+        const descript = req.body.descript;
+        const categ = req.body.categ;
+        console.log('from req.body>>>>>',expens,descript,categ);
+
+        const data = await alldetails.create({
+            expens:expens,
+            descript:descript,
+            categ:categ
+        })
+        res.json({expensedata:data});
+        console.log('res from addexpense method',data);
+    } catch(error){
+        res.json({Error:error});
+        console.log('error from addexpense method',error);
+    }
+}
+
+exports.getexpense = async (req,res) =>{
+    try{
+        const data = await alldetails.findAll();
+        const modifiedData = data.map((alldetails)=>({
+            _id:alldetails.id,
+            expens:alldetails.expens,
+            descript:alldetails.descript,
+            categ:alldetails.categ
+        }))
+        res.json({getexpense:modifiedData});
+        console.log('res from getexpense method',modifiedData);
+    }catch(error){
+        console.log('error from getexpense method',error);
+    }
+}
+
+exports.deleteexpense = async (req,res) =>{
+    try{
+        console.log('params id',req.params.id);
+        if(!req.params.id){
+            throw new error('id is mandatory to delete');
+        }
+        const detailsId = req.params.id;
+        const data  = await alldetails.destroy({where:{id:detailsId}});
+        res.json({deleted:data});
+    }catch(error){
+        res.json({Error:error});
+        console.log('error from delete expense method',error);
+    }
+}
+
+exports.editexpense = async (req,res) =>{
+    try{
+        console.log('params id',req.params.id);
+        if(!req.params.id){
+            throw new error('id is mandatory to delete');
+        }
+        const detailsId = req.params.id;
+        const data  = await alldetails.destroy({where:{id:detailsId}});
+        res.json({deleted:data});
+    }catch(error){
+        res.json({Error:error});
+        console.log('error from delete expense method',error);
+    }
+}
